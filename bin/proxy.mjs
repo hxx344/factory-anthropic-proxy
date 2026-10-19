@@ -45,7 +45,7 @@ try {
       server.once('error', error => { console.error(error.code === 'EADDRINUSE' ? 'The configured port is already in use.' : 'Unable to start the proxy.'); process.exitCode = 1; });
       server.listen(config.port, config.host, () => {
         console.log(`Factory Anthropic Proxy ${VERSION} listening at ${urlFor(config)}`);
-        console.log('Run node bin/proxy.mjs claude to launch Claude Code through this proxy.');
+        console.log('See README.md for client setup and current compatibility limits.');
       });
       let shuttingDown = false;
       const stop = () => {

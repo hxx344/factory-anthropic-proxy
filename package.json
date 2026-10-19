@@ -1,7 +1,7 @@
 {
   "name": "factory-anthropic-proxy",
-  "version": "0.1.0",
-  "description": "Factory Claude gateway for Anthropic Messages clients and Claude Code",
+  "version": "0.1.1",
+  "description": "Factory Claude gateway for basic Anthropic Messages requests",
   "private": true,
   "type": "module",
   "bin": { "factory-anthropic-proxy": "bin/proxy.mjs" },

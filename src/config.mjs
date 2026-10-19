@@ -2,7 +2,7 @@ import { readFile, open, mkdir, chmod } from 'node:fs/promises';
 import { randomBytes } from 'node:crypto';
 import { resolve, dirname } from 'node:path';
 
-export const VERSION = '0.1.0';
+export const VERSION = '0.1.1';
 export const DEFAULTS = Object.freeze({
   host: '127.0.0.1', port: 8787, defaultModel: 'claude-sonnet-4-6',
   models: ['claude-haiku-4-5-20251001', 'claude-sonnet-4-6', 'claude-opus-5-5'],
