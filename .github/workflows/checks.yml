@@ -1,0 +1,37 @@
+name: Checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.os }} / Node ${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: ['22', '24']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm test
+      - run: npm run check
+      - name: Linux installer smoke tests
+        if: runner.os == 'Linux' && matrix.node == '22'
+        run: bash scripts/test-install.sh
+      - name: Linux systemd installation and rollback
+        if: runner.os == 'Linux' && matrix.node == '24'
+        run: sudo env NODE_BINARY="$(command -v node)" bash scripts/test-service.sh
+      - run: npm run package
+      - uses: actions/upload-artifact@v4
+        with:
+          name: package-${{ matrix.os }}-node-${{ matrix.node }}
+          path: dist/*
+          if-no-files-found: error

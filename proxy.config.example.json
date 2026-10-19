@@ -1,0 +1,12 @@
+{
+  "host": "127.0.0.1",
+  "port": 8787,
+  "defaultModel": "claude-sonnet-4-6",
+  "models": ["claude-haiku-4-5-20251001", "claude-sonnet-4-6", "claude-opus-5-5"],
+  "modelAliases": {},
+  "allowRemote": false,
+  "timeoutMs": 300000,
+  "idleTimeoutMs": 90000,
+  "maxBodyBytes": 33554432,
+  "maxConcurrentRequests": 8
+}

@@ -1,0 +1,19 @@
+{
+  "name": "factory-anthropic-proxy",
+  "version": "0.1.0",
+  "description": "Factory Claude gateway for Anthropic Messages clients and Claude Code",
+  "private": true,
+  "type": "module",
+  "bin": { "factory-anthropic-proxy": "bin/proxy.mjs" },
+  "scripts": {
+    "start": "node bin/proxy.mjs serve",
+    "init": "node bin/proxy.mjs init",
+    "test": "node --test test/*.test.mjs",
+    "check": "node scripts/check.mjs",
+    "package": "node scripts/package.mjs"
+  },
+  "files": ["bin", "src", "scripts", "start.cmd", "docs", "README.md", "LICENSE", "proxy.config.example.json", ".env.example"],
+  "engines": { "node": ">=22" },
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/hxx344/factory-anthropic-proxy.git" }
+}
