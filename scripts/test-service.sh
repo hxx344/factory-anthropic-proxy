@@ -69,10 +69,16 @@ NODE
 }
 install_proxy "$ROOT" > "$TEMP/first.log"
 USER_CREATED=1
+if command -v systemd-analyze >/dev/null; then
+  grep -q 'Validating staged systemd unit.' "$TEMP/first.log"
+  systemd-analyze --man=no verify "$UNIT"
+fi
 systemctl is-active --quiet "$SERVICE"
 systemctl is-enabled --quiet "$SERVICE"
 health
 test "$(systemctl show "$SERVICE" --property=User --value)" = "$SERVICE"
+test "$(systemctl show "$SERVICE" --property=WorkingDirectory --value)" = "$PREFIX/current"
+systemctl show "$SERVICE" --property=EnvironmentFiles --value | grep -Fq -- "$CONFIG_DIR/environment"
 test "$(stat -c '%U:%G' "$CONFIG_DIR/proxy.config.json")" = "$SERVICE:$SERVICE"
 test "$(stat -c '%a' "$CONFIG_DIR/proxy.config.json")" = 600
 test "$(stat -c '%a' "$CONFIG_DIR/environment")" = 600

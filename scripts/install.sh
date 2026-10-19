@@ -279,7 +279,8 @@ ENVIRONMENT_SHA="$(sha256sum "$CONFIG_DIR/environment" | awk '{print $1}')"
 if [[ -f "$PREFIX/.install-state" && "$(sed -n 's/^environment=//p' "$PREFIX/.install-state")" != "$ENVIRONMENT_SHA" ]]; then ENV_CHANGED=1; fi
 
 if (( SERVICE )); then
-  cat > "$TEMP/unit.next" <<UNIT
+  UNIT_CANDIDATE="$TEMP/$SERVICE_NAME.service"
+  cat > "$UNIT_CANDIDATE" <<UNIT
 [Unit]
 Description=Factory Anthropic-compatible local proxy
 After=network-online.target
@@ -289,9 +290,9 @@ Wants=network-online.target
 Type=simple
 User=$SERVICE_USER
 Group=$SERVICE_USER
-WorkingDirectory="$PREFIX/current"
+WorkingDirectory=$PREFIX/current
 Environment="PROXY_CONFIG=$CONFIG"
-EnvironmentFile="$CONFIG_DIR/environment"
+EnvironmentFile=$CONFIG_DIR/environment
 ExecStart="$NODE" "$PREFIX/current/bin/proxy.mjs" serve
 Restart=on-failure
 RestartSec=3
@@ -307,10 +308,14 @@ StateDirectory=$SERVICE_NAME
 [Install]
 WantedBy=multi-user.target
 UNIT
-  if [[ ! -f "$UNIT_PATH" ]] || ! cmp -s "$TEMP/unit.next" "$UNIT_PATH"; then
+  if [[ ! -f "$UNIT_PATH" ]] || ! cmp -s "$UNIT_CANDIDATE" "$UNIT_PATH"; then
+    if command -v systemd-analyze >/dev/null; then
+      log 'Validating staged systemd unit.'
+      systemd-analyze --man=no verify "$UNIT_CANDIDATE"
+    fi
     [[ ! -f "$UNIT_PATH" ]] || cp -- "$UNIT_PATH" "$TEMP/unit.before"
     UNIT_CHANGED=1
-    install -m 644 "$TEMP/unit.next" "$UNIT_PATH"
+    install -m 644 "$UNIT_CANDIDATE" "$UNIT_PATH"
     systemctl daemon-reload
   fi
 fi
