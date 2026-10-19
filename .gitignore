@@ -1,0 +1,10 @@
+node_modules/
+.local/
+dist/
+.env
+.env.*
+!.env.example
+proxy.config.json
+*.log
+*.tgz
+coverage/
